@@ -6,7 +6,8 @@ class G2xPredictionsContainerController extends ValueNotifier<List<String>> {
   G2xPredictionsContainerController({List<String> value = const <String>[]}) : super(value);
 
   update(List<String> newValue){
-    value = newValue;
+    value = List.from(newValue);
+    notifyListeners();
   }
 }
 
@@ -47,7 +48,6 @@ class _G2xPredictionsContainerState extends State<G2xPredictionsContainer> {
   }
 
   update(){
-    print(internalList.length);
     internalList = widget.controller.value;
     if(internalList.length > 0 && overlayEntry == null){
       show();
@@ -55,6 +55,7 @@ class _G2xPredictionsContainerState extends State<G2xPredictionsContainer> {
     else if(internalList.length == 0){
       disposeOverlayEntry();
     }
+    overlayEntry?.markNeedsBuild();
   }
 
   void show(){
