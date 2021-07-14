@@ -2,10 +2,19 @@ library g2x_predictions_container;
 
 import 'package:flutter/material.dart';
 
-class G2xPredictionsContainerController extends ValueNotifier<List<String>> {
-  G2xPredictionsContainerController({List<String> value = const <String>[]}) : super(value);
+class G2xPredictionsValue {
+  final String displayText;
+  final dynamic data;
+  const G2xPredictionsValue({
+    required this.displayText,
+    required this.data,
+  });
+}
 
-  update(List<String> newValue){
+class G2xPredictionsContainerController extends ValueNotifier<List<G2xPredictionsValue>> {
+  G2xPredictionsContainerController({List<G2xPredictionsValue> value = const <G2xPredictionsValue>[]}) : super(value);
+
+  update(List<G2xPredictionsValue> newValue){
     value = List.from(newValue);
     notifyListeners();
   }
@@ -15,7 +24,14 @@ class G2xPredictionsContainer extends StatefulWidget {
   final Widget child;
   final G2xPredictionsContainerController controller;
   final ScrollController? scrollController;
-  const G2xPredictionsContainer({ Key? key, required this.child, required this.controller, this.scrollController }) : super(key: key);
+  final Function(G2xPredictionsValue) onTap;
+  const G2xPredictionsContainer({
+    Key? key,
+    required this.child,
+    required this.controller,
+    this.scrollController,
+    required this.onTap,
+  }) : super(key: key);
 
   @override
   _G2xPredictionsContainerState createState() => _G2xPredictionsContainerState();
@@ -23,7 +39,7 @@ class G2xPredictionsContainer extends StatefulWidget {
 
 class _G2xPredictionsContainerState extends State<G2xPredictionsContainer> {
   OverlayEntry? overlayEntry;
-  var internalList = <String>[];
+  var internalList = <G2xPredictionsValue>[];
 
   @override
   void initState() {
@@ -79,9 +95,15 @@ class _G2xPredictionsContainerState extends State<G2xPredictionsContainer> {
             padding: EdgeInsets.zero,
             shrinkWrap: true,
             children: List.generate(widget.controller.value.length, (index){
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(widget.controller.value[index]),
+              return GestureDetector(
+                onTap: (){
+                  widget.onTap(widget.controller.value[index]);
+                  disposeOverlayEntry();
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(widget.controller.value[index].displayText),
+                ),
               );
             })
           ),
