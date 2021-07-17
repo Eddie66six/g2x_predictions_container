@@ -85,29 +85,43 @@ class _G2xPredictionsContainerState extends State<G2xPredictionsContainer> {
     var offset = renderBox.localToGlobal(Offset.zero);
 
     return OverlayEntry(
-      builder: (context) => Positioned(
-        left: offset.dx,
-        top: offset.dy + size.height + 5.0,
-        width: size.width,
-        child: Material(
-          elevation: 4.0,
-          child: ListView(
-            padding: EdgeInsets.zero,
-            shrinkWrap: true,
-            children: List.generate(widget.controller.value.length, (index){
-              return GestureDetector(
-                onTap: (){
-                  widget.onTap(widget.controller.value[index]);
-                  disposeOverlayEntry();
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(widget.controller.value[index].displayText),
-                ),
-              );
-            })
+      builder: (context) => Stack(
+        children: [
+          GestureDetector(
+            onTap: (){
+              disposeOverlayEntry();
+            },
+            child: Container(
+              color: Colors.transparent,
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
+            ),
           ),
-        ),
+          Positioned(
+            left: offset.dx,
+            top: offset.dy + size.height + 5.0,
+            width: size.width,
+            child: Material(
+              elevation: 4.0,
+              child: ListView(
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                children: List.generate(widget.controller.value.length, (index){
+                  return GestureDetector(
+                    onTap: (){
+                      widget.onTap(widget.controller.value[index]);
+                      disposeOverlayEntry();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(widget.controller.value[index].displayText),
+                    ),
+                  );
+                })
+              ),
+            ),
+          ),
+        ],
       )
     );
   }
