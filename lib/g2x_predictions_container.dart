@@ -116,7 +116,10 @@ class _G2xPredictionsContainerState extends State<G2xPredictionsContainer> {
                 padding: EdgeInsets.zero,
                 shrinkWrap: true,
                 children: List.generate(widget.controller.value.length, (index){
-                  return GestureDetector(
+                  return InkWell(
+                    focusColor: Colors.transparent,
+                    highlightColor: Colors.transparent,
+                    hoverColor: Colors.transparent,
                     onTap: (){
                       widget.onTap(widget.controller.value[index]);
                       disposeOverlayEntry();
