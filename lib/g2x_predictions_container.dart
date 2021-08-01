@@ -124,7 +124,8 @@ class _G2xPredictionsContainerState extends State<G2xPredictionsContainer> {
                       widget.onTap(widget.controller.value[index]);
                       disposeOverlayEntry();
                     },
-                    child: Padding(
+                    child: Container(
+                      color: Colors.white,
                       padding: const EdgeInsets.all(8.0),
                       child: widget.controller.value[index].child,
                     ),
