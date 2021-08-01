@@ -3,10 +3,10 @@ library g2x_predictions_container;
 import 'package:flutter/material.dart';
 
 class G2xPredictionsValue {
-  final String displayText;
+  final Widget child;
   final dynamic data;
   const G2xPredictionsValue({
-    required this.displayText,
+    required this.child,
     required this.data,
   });
 }
@@ -25,12 +25,18 @@ class G2xPredictionsContainer extends StatefulWidget {
   final G2xPredictionsContainerController controller;
   final ScrollController? scrollController;
   final Function(G2xPredictionsValue) onTap;
+  final Offset offset;
+  final double? width;
+  final bool alignRight;
   const G2xPredictionsContainer({
     Key? key,
     required this.child,
     required this.controller,
     this.scrollController,
     required this.onTap,
+    this.offset = Offset.zero,
+    this.width,
+    this.alignRight = false
   }) : super(key: key);
 
   @override
@@ -82,7 +88,10 @@ class _G2xPredictionsContainerState extends State<G2xPredictionsContainer> {
   OverlayEntry _createOverlayEntry() {
     RenderBox renderBox = context.findRenderObject()! as RenderBox;
     var size = renderBox.size;
-    var offset = renderBox.localToGlobal(Offset.zero);
+    var offset = renderBox.localToGlobal(widget.offset);
+
+    var calcAlignRight = widget.width != null && widget.alignRight ?
+      size.width < widget.width! ? widget.width! - size.width : (size.width - widget.width!) * -1 : 0;
 
     return OverlayEntry(
       builder: (context) => Stack(
@@ -98,9 +107,9 @@ class _G2xPredictionsContainerState extends State<G2xPredictionsContainer> {
             ),
           ),
           Positioned(
-            left: offset.dx,
+            left: offset.dx - calcAlignRight,
             top: offset.dy + size.height + 5.0,
-            width: size.width,
+            width: widget.width ?? size.width,
             child: Material(
               elevation: 4.0,
               child: ListView(
@@ -114,7 +123,7 @@ class _G2xPredictionsContainerState extends State<G2xPredictionsContainer> {
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text(widget.controller.value[index].displayText),
+                      child: widget.controller.value[index].child,
                     ),
                   );
                 })
